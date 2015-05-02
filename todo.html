@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TODO Sample By Vue.js</title>
+
+    <!-- Bootstrap -->
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
+    <style type="text/css">
+      .done {
+	  text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+
+	<div class="col-md-6">
+
+	  <h1>TODO Sample By Vue.js</h1>
+
+	  <div id="editting" class="input-group">
+	    <input class="form-control"
+		   type="text"
+		   placeholder="What needs to be done?"
+		   v-model="todoTitle">
+	    <span class="input-group-btn">
+	      <button type="button" class="btn btn-default"
+		      v-on="click: add">Add</button>
+	    </span>
+	  </div>
+
+	  <div id="storage">
+	    <table class="table table-hover">
+	      <thead>
+		<tr>
+		  <th class="col-md-2">done</th>
+		  <th class="col-md-7">title</th>
+		  <th class="col-md-3">delete</th>
+		</tr>
+	      </thead>
+	      <tbody>
+		<tr v-repeat="todo: todos"
+		    v-class="done : done, success : done">
+		  <td>
+		    <input type="checkbox"
+			   value="done"
+			   v-model="done">
+		  </td>
+		  <td>{{todo.title}}</td>
+		  <td>
+		    <button class="btn btn-danger"
+			    v-on="click: remove(this)">delete</button>
+		  </td>
+		</tr>
+	      </tbody>
+	    </table>
+	  </div>
+	</div>
+
+      </div><!-- /row -->
+    </div> <!-- /container -->
+
+    <script src="http://vuejs.org/js/vue.min.js"></script>
+    <script>
+    var app = {};
+
+    // editting view model
+    app.editting = new Vue({
+	el: '#editting',
+	data: {
+	    todoTitle: '',
+            done: false
+	},
+	methods: {
+	    add: function(e) {
+		if (!this.todoTitle) {
+		    return;
+		}
+		app.storage.todos.push({
+		    title: this.todoTitle,
+		    done: false
+		});
+		this.todoTitle = '';
+	    }
+	}
+    });
+
+    // storage view model
+    app.storage = new Vue({
+	el: '#storage',
+	data: {
+	    todos: []
+	},
+	methods: {
+	    remove: function(todo) {
+		this.todos.splice(todo.$index, 1);
+	    }
+	}
+    });
+    </script>
+
+  </body>
+</html>
