@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Fixed Top Navbar Example for Bootstrap</title>
+
+  </head>
+
+  <body>
+    <div id="vmscope">
+
+    <!-- Bootstrap core CSS -->
+    <link v-if="useBootstrap" href="css/bootstrap.min.css" rel="stylesheet">
+
+
+    <style type="text/css" v-repeat="aCss: css">{{{aCss.html}}}</style>
+
+    <div class="main">
+      <div class="header"
+	   v-class="current: currentGroup == 'header' && currentContentIndex == $index"
+	   v-repeat="aHeader: header">
+
+	{{{aHeader.html}}}
+      </div>
+      <div class="mainContent"
+	   v-class="current: currentGroup == 'contents' && currentContentIndex == $index"
+	   v-repeat="content: contents">
+	  {{{content.html}}}
+      </div>
+      <div class="footer"
+	   v-class="current: currentGroup == 'footer' && currentContentIndex == $index"
+	   v-repeat="aFooter: footer">
+	  {{{aFooter.html}}}
+      </div>
+    </div><!-- main -->
+
+    <div class="sidebar">
+	<nav class="nav">
+	    <ul class="nav navbar-nav">
+              <li class="active" v-repeat="group: contentGroup"><a href="#" v-on="click: setGroup(this)">{{group}}</a></li>
+	    </ul>
+	</nav>
+      <div class="row">
+	<div class="col-md-2">
+	  <table class="table table-condensed  navbar-left">
+	    <tr v-repeat="content: $data[currentGroup]"><td><a href="#" v-on="click: currentContentIndex=$index">{{(content.name)}}</a></td></tr>
+	  </table>
+	  <button class="btn btn-default btn-sm" v-on="click: addContent">Add</button>
+	  <button class="btn btn-default btn-sm" v-on="click: deleteContent">Del</button>
+	</div>
+	<div class="col-md-10">
+	    <textarea class="form-control" rows="18" v-model="$data[currentGroup][currentContentIndex].html">{{$data[currentGroup][currentContentIndex].html}}</textarea>
+	</div>
+      </div><!-- row -->
+    </div><!-- sidebar -->
+
+    </div><!-- vmscope -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- ViewModel Binding -->
+    <script src="http://vuejs.org/js/vue.min.js"></script>
+    <script>
+    var app = new Vue({
+	el: '#vmscope',
+        data: {
+	    useBootstrap: true,
+	    currentContentIndex:0,
+	    currentGroup: 'contents',
+	    contentGroup: ['css','header','contents','footer'],
+	    css: [
+		{
+		    name:'css',
+		    html:'div.main{\n    padding-top:70px;\n    min-height:2000px;\n}\ndiv.sidebar{\n    position:fixed;\n    float:left;\n    bottom:0px;\n    right:0px;\n    width:500px;\n    height:450px;\n    background-color:#ccc;\n}\n div.sidebar nav{\n  background-color: #f8f8f8;\n  border-color: #e7e7e7;\n  position: relative;\n} div.mainContent div {\n      border:1px solid #fff;\n      margin:auto;\n  }\n  div.main div.current{\n      border:1px solid red;\n  }\n  div.detailSection {\n      background-color: #fff;\n  }\n  div.listSection {\n      background-color: #fff;\n  }\n'
+		}
+	    ],
+	    header: [
+		{
+		    name:'header',
+		    html:'<!-- Fixed navbar -->\n<nav class="navbar navbar-default navbar-fixed-top">\n  <div class="container">\n    <div class="navbar-header">\n      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">\n        <span class="sr-only">Toggle navigation</span>\n        <span class="icon-bar"></span>\n        <span class="icon-bar"></span>\n        <span class="icon-bar"></span>\n      </button>\n      <a class="navbar-brand" href="#">Project name</a>\n    </div>\n    <div id="navbar" class="navbar-collapse collapse">\n      <ul class="nav navbar-nav">\n        <li class="active"><a href="#">Home</a></li>\n        <li><a href="#about">About</a></li>\n        <li><a href="#contact">Contact</a></li>\n        <li class="dropdown">\n          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>\n          <ul class="dropdown-menu" role="menu">\n            <li><a href="#">Action</a></li>\n            <li><a href="#">Another action</a></li>\n            <li><a href="#">Something else here</a></li>\n            <li class="divider"></li>\n            <li class="dropdown-header">Nav header</li>\n            <li><a href="#">Separated link</a></li>\n            <li><a href="#">One more separated link</a></li>\n          </ul>\n        </li>\n      </ul>\n      <ul class="nav navbar-nav navbar-right">\n        <li><a href="../navbar/">Default</a></li>\n        <li><a href="../navbar-static-top/">Static top</a></li>\n        <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>\n      </ul>\n    </div><!--/.nav-collapse -->\n  </div>\n</nav>'
+		}
+	    ],
+	    contents:[
+		{
+		    name:'mainContent',
+		    html:'<div class="container">\n<div class="row">\n  <div class="detailSection col-md-5">\n    <div class="panel panel-default">\n      <div class="panel-heading">\n	Item</div>\n      <div class="panel-body">\n	<form class="form-horizontal">\n	  <div class="form-group">\n	    <label class="col-sm-2 control-label">\n	      name</label>\n	    <div class="col-sm-10">\n	      <input class="form-control" type="text" value="hoge">\n	    </div>\n	  </div>\n	  <div class="form-group">\n	    <label class="col-sm-2 control-label">\n	      names</label>\n	    <div class="col-sm-10">\n	      <input class="form-control" type="text" value="hoge">\n	    </div>\n	  </div>\n	</form>\n      </div>\n    </div>\n  </div>\n  <div class="listSection col-md-7">\n    <table class="table-condensed table table-hover">\n      <thead>\n	<tr>\n	  <th>id</th>\n	  <th>name</th>\n	  <th>address</th>\n	</tr>\n      </thead>\n      <tbody>\n	<tr>\n	  <td>1</td>\n	  <td>name</td>\n	  <td>address</td>\n	</tr>\n	<tr>\n	  <td>1</td>\n	  <td>name</td>\n	  <td>address</td>\n	</tr>\n	<tr>\n	  <td>1</td>\n	  <td>name</td>\n	  <td>address</td>\n	</tr>\n	<tr>\n	  <td>1</td>\n	  <td>name</td>\n	  <td>address</td>\n	</tr>\n	<tr>\n	  <td>1</td>\n	  <td>name</td>\n	  <td>address</td>\n	</tr>\n      </tbody>\n    </table>\n  </div>\n  <!-- col-->\n</div>\n<!-- row -->\n</div><!--container-->\n'
+		}
+	    ],
+	    footer: [
+		{
+		    name: 'footer',
+		    html: ''
+		}
+	    ]
+	},
+	methods: {
+	    addContent: function() {
+		var idx = this[this.currentGroup].length;
+		var name = this.currentGroup + idx;
+		this[this.currentGroup].push({
+		    name: name,
+		    html: ''
+		});
+		this.currentContentIndex = idx;
+	    },
+	    deleteContent: function(vue) {
+		this[this.currentGroup].splice(this.currentContentIndex, 1);
+		if (0 < this.currentContentIndex) {
+		    this.currentContentIndex--;
+		}
+	    },
+	    setGroup: function(vue){
+		if(this.currentGroup == vue.group) { return; }
+		this.currentGroup = vue.group
+		this.currentContentIndex = 0;
+	    },
+	    currentContentHTML: function() {
+		return data[currentGroup][currentContentIndex].html;
+	    }
+	}
+    });
+    </script>
+
+  </body>
+</html>
